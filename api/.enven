@@ -1,0 +1,4 @@
+export MONGODB_DATABASE: backend
+export MONGODB_USERNAME: backend_user
+export MONGODB_PASSWORD: user
+export MONGODB_HOSTNAME: mongodb

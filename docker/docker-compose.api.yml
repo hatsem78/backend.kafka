@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  indexer:
+    build: ../indexer
+    ports:
+      - 8007:8007
+    environment:
+      POSTGRES_URL: postgres_db
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: bookstore
+      POSTGRES_USER: root
+    networks:
+      - intellisite
+
+networks:
+  default:
+   external:
+     name: intellisite

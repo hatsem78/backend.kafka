@@ -1,0 +1,23 @@
+from typing import Optional
+
+from pydantic import BaseModel, EmailStr
+
+
+class AutoBase(BaseModel):
+    year: Optional[int]
+    make: Optional[str]
+    model: Optional[str] = None
+    category: Optional[str] = None
+
+
+# Properties to receive via API on creation
+class AutoCreate(AutoBase):
+    year: Optional[int]
+    make: Optional[str]
+    model: Optional[str] = None
+    category: Optional[str] = None
+
+
+# Properties to receive via API on update
+class AutoUpdate(AutoBase):
+    ...
