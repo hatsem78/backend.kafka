@@ -17,3 +17,5 @@ networks:
   default:
    external:
      name: intellisite
+     external: true
+

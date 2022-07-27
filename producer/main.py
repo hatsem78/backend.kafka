@@ -26,7 +26,7 @@ if __name__ == "__main__":
         detection: dict = fake.vehicle_object()
         key= str(detection["Category"]).encode()
         producer.send(DETECTIONS_TOPIC, key=key, value=detection)
-        #print(detection["Category"])  # DEBUG
+        print(detection["Category"])  # DEBUG
         sleep(1)
 
     producer.flush()

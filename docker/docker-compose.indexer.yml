@@ -10,10 +10,13 @@ services:
       DETECTIONS_TOPIC: intellisite.detections
       ALERTS_TOPIC: intellisite.alerts
       SUSPICIOUS_VEHICLE: SUV
+      POSTGRES_URL: docker_postgres_db_1
+      POSTGRES_DB: bookstore
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: root
     networks:
       - intellisite
 
 networks:
-  default:
-   external:
-     name: intellisite
+   intellisite:
+     external: true

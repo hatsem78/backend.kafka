@@ -1,11 +1,10 @@
-import os
-
-from kafka import KafkaConsumer
-import json
-from fastapi import APIRouter, HTTPException, Depends
-from kafka import KafkaConsumer
-from sqlalchemy.orm.session import Session
 import asyncio
+import os
+from json import loads
+
+from fastapi import HTTPException
+from kafka import KafkaConsumer
+
 from core.settings import config
 from core.settings import get_logger
 from db.crud import crud_auto
@@ -16,7 +15,7 @@ logger = get_logger('endpoints items')
 logger.getChild('endpoints service consumer')
 
 
-def consumer(filter, db):
+async def consumer(filters: object, db: object) -> object:
     result = None
 
     '''consumer = KafkaConsumer(
@@ -37,36 +36,43 @@ def consumer(filter, db):
         else:
             result = message.value.decode()'''
 
-    consumer = KafkaConsumer(
+    consumer_app = KafkaConsumer(
         DETECTIONS_TOPIC,
         bootstrap_servers=KAFKA_BROKER_URL,
         # Encode all values as JSON
-        group_id='Pickup'
+        group_id=filters,
+        value_deserializer=lambda x: loads(x.decode('utf-8'))
     )
 
     logger.info(
-        f"Start consumer with  topic '{config.DETECTIONS_TOPIC}'."
+        f"Start consumer_app with  topic '{config.DETECTIONS_TOPIC}'."
     )
 
-    logger.info("Consumer started.")
+    logger.info("consumer_app started.")
 
     try:
 
-        logger.info(f"Get {len(result)} messages in {config.DETECTIONS_TOPIC}.")
+        #logger.info(f"Get {len(result)} messages in {config.DETECTIONS_TOPIC}.")
 
-        for message in consumer:
+        for message in consumer_app:
 
             if isinstance(message.key, bytes):
                 result = message.key.decode()
             else:
                 result = message.key.decode()
-            if result == filter:
-                crud_auto.token.create(db=db, obj_in=message.value.decode())
-                return message.value.decode()
+            if result == filters:
+                message_new = {k.lower(): v for k, v in message.value.items()}
+                crud_auto.crud_auto.create(db=db, obj_in=message_new)
+
     except Exception as e:
         logger.error(
             f"Error when trying to consume request for topic {config.DETECTIONS_TOPIC}: {str(e)}"
         )
+        logger.error(e)
+        consumer.pause()
+        await asyncio.sleep(2)
+        consumer.resume()
         raise HTTPException(status_code=500, detail=str(e))
+
 
     return None

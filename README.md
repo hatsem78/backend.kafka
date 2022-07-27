@@ -71,7 +71,7 @@ Topics:
 Examples detection message:
 
 ```json
-{'Year': 2011, 'Make': 'Toyota', 'Model': 'Land Cruiser', 'Category': 'SUV'}
+  {'Year': 2011, 'Make': 'Toyota', 'Model': 'Land Cruiser', 'Category': 'SUV'}
 ```
 
 ## Teardown
